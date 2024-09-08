@@ -13,9 +13,9 @@ import edges_data from "./data.json"
 import Header from "./header.jsx"
 
 const INITIAL_VIEW_STATE = {
-  latitude: 41.4,
-  longitude: 2.17,
-  zoom: 12,
+  latitude: 41.38685633118305, 
+  longitude:   2.1696874299405295,
+  zoom: 13,
   bearing: 0,
   pitch: 30,
 }

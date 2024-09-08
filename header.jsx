@@ -8,13 +8,13 @@ const HeaderBar = styled.div`
   justify-content: space-between;
   background-color: #282c34;
   color: white;
-  padding: 20px;
-  height: 30px;
+  padding: 15px;
+  height: 20px;
   font-family: "Gill Sans", sans-serif;
 `
 
 const Title = styled.div`
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: bold;
 `
 
