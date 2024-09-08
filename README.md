@@ -8,3 +8,13 @@ python + osmnx
 
 ## Frontend:
 react + deck.gl
+
+# Status:
+## Done: 
+- skeleton app
+
+## TODO:
+- dynamic data loading from external source
+- automated status update
+- on-hover info for streets
+
