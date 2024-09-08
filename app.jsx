@@ -12,7 +12,7 @@ import { GeoJsonLayer } from "deck.gl"
 import { MapboxOverlay as DeckOverlay } from "@deck.gl/mapbox"
 import "maplibre-gl/dist/maplibre-gl.css"
 
-const url = 'https://raw.githubusercontent.com/kkornakiewicz/walks-fe/main/data.json'
+const url = "http://ey.mm.st.user.fm/data.json"
 const INITIAL_VIEW_STATE = {
 
   latitude: 41.38685633118305,
@@ -50,7 +50,12 @@ function Root() {
     if (el.properties.osmid === hovered) {
       return [112, 41, 99]
     }
-    return [250, 128, 114, 140]
+    else if (el.properties.visited){
+      return [196, 30, 58, 150]
+    }
+    else {
+      return [211,211,211,40]
+    }
   }
 
   
@@ -89,8 +94,8 @@ function Root() {
       onHover: info => hover(info.object),
       updateTriggers: {
         getLineColor: [hovered],
+      }, 
       beforeId: 'watername_ocean' // In interleaved mode, render the layer under map labels
-      }, // beforeId: 'watername_ocean' // In interleaved mode, render the layer under map labels
     }),
   ]
 
