@@ -22,20 +22,17 @@ function DeckGLOverlay(props) {
 }
 
 function Root() {
-  const [selected, setSelected] = useState(null);
-
-
   const getColorByProperty = (el) => {
     if (el.properties.visited)
     {
-      return [250, 128, 114]
+      return [250, 128, 114, 140]
     }
     else return  [242, 243, 244]
   }
 
   const layers = [
     new GeoJsonLayer({
-      id: 'airports',
+      id: 'map',
       data: edges_data,
       // Styles
       filled: true,
@@ -46,7 +43,6 @@ function Root() {
       getLineWidth: 8,
       // Interactive props
       autoHighlight: true,
-      onClick: info => setSelected(info.object)
       // beforeId: 'watername_ocean' // In interleaved mode, render the layer under map labels
     }),
   ];
@@ -56,19 +52,7 @@ function Root() {
   return (
   <>
     <Map initialViewState={INITIAL_VIEW_STATE} mapStyle={MAP_STYLE}>
-      {selected && (
-        <Popup
-          key={selected.properties.name}
-          anchor="bottom"
-          style={{zIndex: 10}} /* position above deck.gl canvas */
-          longitude={selected.geometry.coordinates[0]}
-          latitude={selected.geometry.coordinates[1]}
-        >
-          {selected.properties.name} ({selected.properties.abbrev})
-        </Popup>
-      )}
-      <DeckGLOverlay layers={layers} /* interleaved*/ />
-      <NavigationControl position="top-left" />
+         <DeckGLOverlay layers={layers} /* interleaved*/ />
     </Map>
   </>
   );
