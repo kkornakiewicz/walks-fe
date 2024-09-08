@@ -12,9 +12,9 @@ react + deck.gl
 # Status:
 ## Done: 
 - skeleton app
+- loading data from github repo
 
 ## TODO:
-- dynamic data loading from external source
-- automated status update
+- automated status update, widget for statistics and context
 - on-hover info for streets
 
