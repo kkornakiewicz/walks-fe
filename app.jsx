@@ -25,11 +25,6 @@ function Root() {
   const [selected, setSelected] = useState(null);
 
 
-  useEffect(() => {
-    console.log(edges_data)
-  })
-
-
   const getColorByProperty = (el) => {
     if (el.properties.visited)
     {
