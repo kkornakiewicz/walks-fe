@@ -6,15 +6,17 @@ import {
   Popup,
   useControl,
 } from "react-map-gl/maplibre"
+
 import { GeoJsonLayer, ArcLayer } from "deck.gl"
 import { MapboxOverlay as DeckOverlay } from "@deck.gl/mapbox"
 import "maplibre-gl/dist/maplibre-gl.css"
-import edges_data from "./data.json"
 import Header from "./header.jsx"
 
+const url = 'https://raw.githubusercontent.com/kkornakiewicz/walks-fe/main/data.json'
+
 const INITIAL_VIEW_STATE = {
-  latitude: 41.38685633118305, 
-  longitude:   2.1696874299405295,
+  latitude: 41.38685633118305,
+  longitude: 2.1696874299405295,
   zoom: 13,
   bearing: 0,
   pitch: 30,
@@ -28,17 +30,42 @@ function DeckGLOverlay(props) {
   return null
 }
 
-function Root() {
-  const getColorByProperty = el => {
+const getColorByProperty = el => {
     if (el.properties.visited) {
       return [250, 128, 114, 140]
     } else return [242, 243, 244]
   }
 
+function Root() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  useEffect(() => {
+    // Fetch data when the component loads
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const jsonData = await response.json(); // Use response.text() for non-JSON data
+        setData(jsonData);
+        setLoading(false);
+      } catch (error) {
+        setError(error.message);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []); 
+
+
   const layers = [
     new GeoJsonLayer({
       id: "map",
-      data: edges_data,
+      data: data,
       // Styles
       filled: true,
       pointRadiusMinPixels: 2,
@@ -54,9 +81,9 @@ function Root() {
 
   return (
     <>
-    <Header/>
+      <Header />
       <Map initialViewState={INITIAL_VIEW_STATE} mapStyle={MAP_STYLE}>
-        <DeckGLOverlay layers={layers} /* interleaved*/ />
+        <DeckGLOverlay layers={layers} overlaid/>
       </Map>
     </>
   )
