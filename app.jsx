@@ -31,9 +31,7 @@ function DeckGLOverlay(props) {
 }
 
 const getColorByProperty = el => {
-    if (el.properties.visited) {
       return [250, 128, 114, 140]
-    } else return [242, 243, 244]
   }
 
 function Root() {
@@ -75,7 +73,7 @@ function Root() {
       getLineWidth: 8,
       // Interactive props
       autoHighlight: true,
-      // beforeId: 'watername_ocean' // In interleaved mode, render the layer under map labels
+      beforeId: 'watername_ocean' // In interleaved mode, render the layer under map labels
     }),
   ]
 
@@ -83,7 +81,7 @@ function Root() {
     <>
       <Header />
       <Map initialViewState={INITIAL_VIEW_STATE} mapStyle={MAP_STYLE}>
-        <DeckGLOverlay layers={layers} overlaid/>
+        <DeckGLOverlay layers={layers} interleaved/>
       </Map>
     </>
   )

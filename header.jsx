@@ -28,7 +28,7 @@ const Header = () => {
   return (
     <HeaderBar>
       <Title>Walking every street in Barcelona</Title>
-      <InfoText>Completed: 43.41%</InfoText>
+      <InfoText>Completed: 43.41% | Walked: 1515km</InfoText>
     </HeaderBar>
   )
 }
