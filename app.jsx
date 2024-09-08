@@ -7,20 +7,21 @@ import {
   useControl,
 } from "react-map-gl/maplibre"
 
-import { GeoJsonLayer, ArcLayer } from "deck.gl"
+import Header from "./header.jsx"
+import { GeoJsonLayer } from "deck.gl"
 import { MapboxOverlay as DeckOverlay } from "@deck.gl/mapbox"
 import "maplibre-gl/dist/maplibre-gl.css"
-import Header from "./header.jsx"
 
 const url = 'https://raw.githubusercontent.com/kkornakiewicz/walks-fe/main/data.json'
-
 const INITIAL_VIEW_STATE = {
+
   latitude: 41.38685633118305,
   longitude: 2.1696874299405295,
   zoom: 13,
   bearing: 0,
   pitch: 30,
 }
+
 
 const MAP_STYLE =
   "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
@@ -30,14 +31,28 @@ function DeckGLOverlay(props) {
   return null
 }
 
-const getColorByProperty = el => {
-      return [250, 128, 114, 140]
-  }
-
 function Root() {
+  const [selected, setSelected] = useState(null)
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [hovered, setHovered] = useState(null)
+
+  const hover = el => {
+    if (el != null) {
+      setHovered(el.properties.osmid)
+    } else {
+      setHovered(null)
+    }
+  }
+
+  const getColorByProperty = el => {
+    if (el.properties.osmid === hovered) {
+      return [112, 41, 99]
+    }
+    return [250, 128, 114, 140]
+  }
+
   
   useEffect(() => {
     // Fetch data when the component loads
@@ -64,16 +79,18 @@ function Root() {
     new GeoJsonLayer({
       id: "map",
       data: data,
+      pickable: true,
       // Styles
-      filled: true,
-      pointRadiusMinPixels: 2,
-      pointRadiusScale: 2000,
-      getFillColor: [200, 0, 80, 180],
       getLineColor: getColorByProperty,
       getLineWidth: 8,
       // Interactive props
       autoHighlight: true,
+      onClick: info => setSelected(info.object),
+      onHover: info => hover(info.object),
+      updateTriggers: {
+        getLineColor: [hovered],
       beforeId: 'watername_ocean' // In interleaved mode, render the layer under map labels
+      }, // beforeId: 'watername_ocean' // In interleaved mode, render the layer under map labels
     }),
   ]
 
@@ -81,7 +98,19 @@ function Root() {
     <>
       <Header />
       <Map initialViewState={INITIAL_VIEW_STATE} mapStyle={MAP_STYLE}>
-        <DeckGLOverlay layers={layers} interleaved/>
+        {selected && (
+          <Popup
+            key={selected.properties.osmid}
+            style={{ zIndex: 10 }} /* position above deck.gl canvas */
+            longitude={selected.geometry.coordinates[0][0]}
+            latitude={selected.geometry.coordinates[0][1]}
+            maxWidth="400px"
+          >
+            <p>{selected.properties.name}</p>
+          </Popup>
+        )}
+        <DeckGLOverlay layers={layers} /* interleaved */ />
+        <NavigationControl position="top-left" />
       </Map>
     </>
   )
