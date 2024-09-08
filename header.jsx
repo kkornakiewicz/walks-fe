@@ -9,7 +9,7 @@ const HeaderBar = styled.div`
   background-color: #282c34;
   color: white;
   padding: 20px;
-  height: 40px;
+  height: 30px;
   font-family: "Gill Sans", sans-serif;
 `
 
@@ -28,7 +28,7 @@ const Header = () => {
   return (
     <HeaderBar>
       <Title>Walking every street in Barcelona</Title>
-      <InfoText>Current progress: 43.41%</InfoText>
+      <InfoText>Completed: 43.41%</InfoText>
     </HeaderBar>
   )
 }
