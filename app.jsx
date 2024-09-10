@@ -59,7 +59,7 @@ function Root() {
     if (el.properties.visited === true) {
       return [0, 0, 0, 20]
     }
-    return [0,0,0,230]
+    return [0,0,0,180]
   }
 
   useEffect(() => {
