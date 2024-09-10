@@ -7,7 +7,7 @@ import {
   useControl,
 } from "react-map-gl/maplibre"
 
-import Header from "./header.jsx"
+import Header from "./header.tsx"
 import { GeoJsonLayer } from "deck.gl"
 import { MapboxOverlay as DeckOverlay } from "@deck.gl/mapbox"
 import "maplibre-gl/dist/maplibre-gl.css"
