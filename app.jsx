@@ -48,11 +48,18 @@ function Root() {
     }
   }
 
-  const getColorByProperty = el => {
+  const getEdgeColorByProperty = el => {
     if (el.properties.osmid === hovered) {
       return [112, 41, 99]
     }
     return [250, 128, 114, 140]
+  }
+  
+  const getNodeColorByProperty = el => {
+    if (el.properties.visited === true) {
+      return [0, 0, 0, 20]
+    }
+    return [0,0,0,230]
   }
 
   useEffect(() => {
@@ -102,7 +109,7 @@ function Root() {
       data: edges,
       pickable: true,
       // Styles
-      getLineColor: getColorByProperty,
+      getLineColor: getEdgeColorByProperty,
       getLineWidth: 8,
       // Interactive props
       autoHighlight: true,
@@ -117,10 +124,10 @@ function Root() {
       id: "nodes",
       data: nodes,
       // Styles
-      getFillColor: [255,255,255],
+      getLineColor: getNodeColorByProperty,
       // Interactive props
       autoHighlight: true,
-      getLineWidth: 8,
+      getLineWidth: 10,
       beforeId: "watername_ocean", // In interleaved mode, render the layer under map labels
     }),
   ]
