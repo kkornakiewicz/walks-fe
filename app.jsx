@@ -12,17 +12,17 @@ import { GeoJsonLayer } from "deck.gl"
 import { MapboxOverlay as DeckOverlay } from "@deck.gl/mapbox"
 import "maplibre-gl/dist/maplibre-gl.css"
 
-const url = 'https://raw.githubusercontent.com/kkornakiewicz/walks-fe/main/data.json'
+const url_edges  =
+  "https://raw.githubusercontent.com/kkornakiewicz/walks-fe/main/edges.json"
+const url_nodes = "https://raw.githubusercontent.com/kkornakiewicz/walks-fe/main/nodes.json"
 
 const INITIAL_VIEW_STATE = {
-
   latitude: 41.38685633118305,
   longitude: 2.1696874299405295,
   zoom: 13,
   bearing: 0,
   pitch: 30,
 }
-
 
 const MAP_STYLE =
   "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
@@ -34,9 +34,10 @@ function DeckGLOverlay(props) {
 
 function Root() {
   const [selected, setSelected] = useState(null)
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [edges, setEdges] = useState(null)
+  const [nodes, setNodes] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
   const [hovered, setHovered] = useState(null)
 
   const hover = el => {
@@ -54,32 +55,51 @@ function Root() {
     return [250, 128, 114, 140]
   }
 
-  
   useEffect(() => {
     // Fetch data when the component loads
     const fetchData = async () => {
       try {
-        const response = await fetch(url);
+        const response = await fetch(url_edges)
         if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+          throw new Error(`HTTP error! Status: ${response.status}`)
         }
-        const jsonData = await response.json(); // Use response.text() for non-JSON data
-        setData(jsonData);
-        setLoading(false);
+        const jsonData = await response.json() // Use response.text() for non-JSON data
+        setEdges(jsonData)
+        setLoading(false)
       } catch (error) {
-        setError(error.message);
-        setLoading(false);
+        setError(error.message)
+        setLoading(false)
       }
-    };
+    }
 
-    fetchData();
-  }, []); 
+    fetchData()
+  }, [])
 
+  useEffect(() => {
+    // Fetch data when the component loads
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url_nodes)
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`)
+        }
+        const jsonData = await response.json() // Use response.text() for non-JSON data
+        setNodes(jsonData)
+        console.log(jsonData)
+        setLoading(false)
+      } catch (error) {
+        setError(error.message)
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [])
 
   const layers = [
     new GeoJsonLayer({
       id: "map",
-      data: data,
+      data: edges,
       pickable: true,
       // Styles
       getLineColor: getColorByProperty,
@@ -90,8 +110,18 @@ function Root() {
       onHover: info => hover(info.object),
       updateTriggers: {
         getLineColor: [hovered],
-      }, 
-      beforeId: 'watername_ocean' // In interleaved mode, render the layer under map labels
+      },
+      beforeId: "watername_ocean", // In interleaved mode, render the layer under map labels
+    }),
+    new GeoJsonLayer({
+      id: "nodes",
+      data: nodes,
+      // Styles
+      getFillColor: [255,255,255],
+      // Interactive props
+      autoHighlight: true,
+      getLineWidth: 8,
+      beforeId: "watername_ocean", // In interleaved mode, render the layer under map labels
     }),
   ]
 
