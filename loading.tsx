@@ -25,7 +25,7 @@ const Loading = (props: {isLoading: boolean}) => {
   return (
     <>
       <Overlay isVisible={props.isLoading}>
-        <LoadingText>Loading...</LoadingText>
+        <LoadingText>Painting Barcelona, one street at a time...</LoadingText>
       </Overlay>
     </>
   )
