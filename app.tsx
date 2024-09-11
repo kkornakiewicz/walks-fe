@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import type * as GeoJSON from "geojson";
+import type * as GeoJSON from "geojson"
 import { createRoot } from "react-dom/client"
 import {
   Map,
@@ -12,12 +12,17 @@ import Header from "./header.tsx"
 import { GeoJsonLayer } from "deck.gl"
 import { MapboxOverlay, MapboxOverlayProps } from "@deck.gl/mapbox"
 import "maplibre-gl/dist/maplibre-gl.css"
-import {NodeFeature, EdgeFeature, NodeProperties, EdgeProperties }from "./types.tsx"
+import {
+  NodeFeature,
+  EdgeFeature,
+  NodeProperties,
+  EdgeProperties,
+} from "./types.tsx"
 
-
-const url_edges  =
+const url_edges =
   "https://raw.githubusercontent.com/kkornakiewicz/walks-fe/main/edges.json"
-const url_nodes = "https://raw.githubusercontent.com/kkornakiewicz/walks-fe/main/nodes.json"
+const url_nodes =
+  "https://raw.githubusercontent.com/kkornakiewicz/walks-fe/main/nodes.json"
 
 const INITIAL_VIEW_STATE = {
   latitude: 41.38685633118305,
@@ -38,8 +43,14 @@ function DeckGLOverlay(props: MapboxOverlayProps) {
 
 function Root() {
   const [selectedEdge, setSelectedEdge] = useState<EdgeFeature | null>(null)
-  const [edges, setEdges] = useState<GeoJSON.FeatureCollection<GeoJSON.LineString, EdgeProperties> | null>(null)
-  const [nodes, setNodes] = useState<GeoJSON.FeatureCollection<GeoJSON.Point, NodeProperties> | null>(null)
+  const [edges, setEdges] = useState<GeoJSON.FeatureCollection<
+    GeoJSON.LineString,
+    EdgeProperties
+  > | null>(null)
+  const [nodes, setNodes] = useState<GeoJSON.FeatureCollection<
+    GeoJSON.Point,
+    NodeProperties
+  > | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [hovered, setHovered] = useState(null)
@@ -52,18 +63,18 @@ function Root() {
     }
   }
 
-  const getEdgeColorByProperty = (el : EdgeFeature) => {
+  const getEdgeColorByProperty = (el: EdgeFeature) => {
     if (el.properties.osmid === hovered) {
       return [112, 41, 99]
     }
     return [250, 128, 114, 140]
   }
-  
+
   const getNodeColorByProperty = (el: NodeFeature) => {
     if (el.properties.visited === true) {
       return [0, 0, 0, 20]
     }
-    return [0,0,0,180]
+    return [0, 0, 0, 180]
   }
 
   useEffect(() => {
@@ -111,12 +122,12 @@ function Root() {
     new GeoJsonLayer({
       id: "map",
       data: edges,
-      pickable: true,
       // Styles
       getLineColor: getEdgeColorByProperty,
       getLineWidth: 8,
       // Interactive props
       autoHighlight: true,
+      pickable: true,
       onClick: info => setSelectedEdge(info.object),
       onHover: info => hover(info.object),
       updateTriggers: {
@@ -139,7 +150,7 @@ function Root() {
   return (
     <>
       <Header />
-      <Map initialViewState={INITIAL_VIEW_STATE} mapStyle={MAP_STYLE}>
+      <Map initialViewState={INITIAL_VIEW_STATE} mapStyle={MAP_STYLE} >
         {selectedEdge && (
           <Popup
             key={selectedEdge.properties.osmid}
@@ -151,7 +162,8 @@ function Root() {
             <p>{selectedEdge.properties.name}</p>
           </Popup>
         )}
-        <DeckGLOverlay layers={layers} /* interleaved */ />
+        <DeckGLOverlay layers={layers} /* interleaved */ useDevicePixels={false}/>
+
         <NavigationControl position="top-left" />
       </Map>
     </>
