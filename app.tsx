@@ -35,9 +35,10 @@ const INITIAL_VIEW_STATE = {
 }
 
 const PopupContent = styled.div`
-  font-size: 3rem;
-  padding: 1rem;
+  font-size: 2vw;
+  padding: 0.2em 1em;
   line-height: 1.2em;
+  font-family: "Gill Sans", sans-serif;
 `
 
 const MAP_STYLE = "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json"
