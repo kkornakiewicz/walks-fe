@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"
 import type * as GeoJSON from "geojson"
+import styled from "styled-components"
 import { createRoot } from "react-dom/client"
 import {
   Map,
@@ -32,6 +33,12 @@ const INITIAL_VIEW_STATE = {
   bearing: 0,
   pitch: 30,
 }
+
+const PopupContent = styled.div`
+  font-size: 3rem;
+  padding: 1rem;
+  line-height: 1.2em;
+`
 
 const MAP_STYLE = "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json"
 
@@ -67,7 +74,10 @@ function Root() {
     if (el.properties.osmid === hovered) {
       return [112, 41, 99]
     }
-    return [250, 128, 114, 140]
+    if (el.properties.visited === true) return [250, 128, 114, 140]
+    else {
+      return [250, 128, 114, 10]
+    }
   }
 
   const getNodeColorByProperty = (el: NodeFeature) => {
@@ -150,7 +160,7 @@ function Root() {
   return (
     <>
       <Header />
-      <Loading isLoading={loading}/>
+      <Loading isLoading={loading} />
       <Map initialViewState={INITIAL_VIEW_STATE} mapStyle={MAP_STYLE}>
         {selectedEdge && (
           <Popup
@@ -158,9 +168,9 @@ function Root() {
             style={{ zIndex: 10 }} /* position above deck.gl canvas */
             longitude={selectedEdge.geometry.coordinates[0][0]}
             latitude={selectedEdge.geometry.coordinates[0][1]}
-            maxWidth="400px"
+            maxWidth="60em"
           >
-            <p>{selectedEdge.properties.name}</p>
+            <PopupContent>{selectedEdge.properties.name}</PopupContent>
           </Popup>
         )}
         <DeckGLOverlay
