@@ -9,6 +9,7 @@ import {
 } from "react-map-gl/maplibre"
 
 import Header from "./header.tsx"
+import Loading from "./loading.tsx"
 import { GeoJsonLayer } from "deck.gl"
 import { MapboxOverlay, MapboxOverlayProps } from "@deck.gl/mapbox"
 import "maplibre-gl/dist/maplibre-gl.css"
@@ -32,8 +33,7 @@ const INITIAL_VIEW_STATE = {
   pitch: 30,
 }
 
-const MAP_STYLE =
-  "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
+const MAP_STYLE = "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json"
 
 function DeckGLOverlay(props: MapboxOverlayProps) {
   const overlay = useControl(() => new MapboxOverlay(props))
@@ -150,7 +150,8 @@ function Root() {
   return (
     <>
       <Header />
-      <Map initialViewState={INITIAL_VIEW_STATE} mapStyle={MAP_STYLE} >
+      <Loading isLoading={loading}/>
+      <Map initialViewState={INITIAL_VIEW_STATE} mapStyle={MAP_STYLE}>
         {selectedEdge && (
           <Popup
             key={selectedEdge.properties.osmid}
@@ -162,7 +163,10 @@ function Root() {
             <p>{selectedEdge.properties.name}</p>
           </Popup>
         )}
-        <DeckGLOverlay layers={layers} /* interleaved */ useDevicePixels={false}/>
+        <DeckGLOverlay
+          layers={layers}
+          /* interleaved */ useDevicePixels={false}
+        />
 
         <NavigationControl position="top-left" />
       </Map>
