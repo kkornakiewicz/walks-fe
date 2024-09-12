@@ -4,21 +4,11 @@ import type * as GeoJSON from "geojson"
 import "@mantine/core/styles.css"
 
 import { createRoot } from "react-dom/client"
-import {
-	Map,
-	Popup,
-	useControl,
-} from "react-map-gl/maplibre"
+import { Map, Popup, useControl } from "react-map-gl/maplibre"
 
 import Header from "./header.tsx"
-import Loading from "./loading.tsx"
 
-import {
-	AppShell,
-	Container,
-	createTheme,
-	rem,
-} from "@mantine/core"
+import { AppShell, Container } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
 import { MantineProvider, Text } from "@mantine/core"
 
@@ -46,16 +36,6 @@ const INITIAL_VIEW_STATE = {
 	pitch: 30,
 }
 
-const theme = createTheme({
-	fontSizes: {
-    xs: rem(10),
-    sm: rem(11),
-    md: rem(14),
-    lg: rem(16),
-    xl: rem(20),
-  },
-});
-
 const MAP_STYLE = "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json"
 
 function DeckGLOverlay(props: MapboxOverlayProps) {
@@ -66,6 +46,8 @@ function DeckGLOverlay(props: MapboxOverlayProps) {
 
 function Root() {
 	const [opened, { toggle, open, close }] = useDisclosure(false)
+	const [showStreets, setShowStreets] = useState(true)
+	const [showNodes, setShowNodes] = useState(false)
 
 	const [selectedEdge, setSelectedEdge] = useState<EdgeFeature | null>(null)
 	const [edges, setEdges] = useState<GeoJSON.FeatureCollection<
@@ -162,6 +144,7 @@ function Root() {
 				getLineColor: [hovered],
 			},
 			beforeId: "watername_ocean", // In interleaved mode, render the layer under map labels
+			visible: showStreets,
 		}),
 		new GeoJsonLayer({
 			id: "nodes",
@@ -172,18 +155,27 @@ function Root() {
 			autoHighlight: true,
 			getLineWidth: 10,
 			beforeId: "watername_ocean", // In interleaved mode, render the layer under map labels
+			visible: showNodes
 		}),
 	]
 
 	return (
-		<MantineProvider theme={theme}>
+		<MantineProvider>
 			<AppShell header={{ height: 60 }}>
 				<AppShell.Header withBorder={false}>
 					<Header opened={opened} toggle={toggle} />
 				</AppShell.Header>
 
 				<AppShell.Main>
-					<Menu opened={opened} close={close} open={open} />
+					<Menu
+						opened={opened}
+						close={close}
+						open={open}
+						showStreets={showStreets}
+						setShowStreets={setShowStreets}
+						showNodes={showNodes}
+						setShowNodes={setShowNodes}
+					/>
 					<Container h="100vh" fluid w="100%" p="0">
 						<Map initialViewState={INITIAL_VIEW_STATE} mapStyle={MAP_STYLE}>
 							{selectedEdge && (
@@ -195,7 +187,6 @@ function Root() {
 									maxWidth="60em"
 								>
 									<Text>{selectedEdge.properties.name}</Text>
-
 								</Popup>
 							)}
 							<DeckGLOverlay

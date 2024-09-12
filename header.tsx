@@ -1,12 +1,10 @@
-import { Flex, Text, Title } from "@mantine/core"
+import { Flex, Text} from "@mantine/core"
 import React from "react"
 import { Burger } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
 
 // Header Component
 const Header = (props: {opened: boolean, toggle:  () => void}) => {
-  
-
   return (
     <Flex
       justify="space-between"
@@ -22,7 +20,7 @@ const Header = (props: {opened: boolean, toggle:  () => void}) => {
       </Text>
       <Burger
         lineSize={2}
-        size="xl"
+        size="md"
         opened={props.opened}
         onClick={props.toggle}
         aria-label="Toggle navigation"
