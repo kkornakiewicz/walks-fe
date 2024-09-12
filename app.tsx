@@ -176,13 +176,13 @@ function Root() {
 
 	return (
 		<MantineProvider>
-			<AppShell padding="md">
+			<AppShell header={{ height: 70}}>
 				<AppShell.Header withBorder={false}>
 					<Header />
 				</AppShell.Header>
 
 				<AppShell.Main>
-					<Container h="88vh" fluid>
+					<Container h="100vh" fluid w="100%" p="0">
 						<Map initialViewState={INITIAL_VIEW_STATE} mapStyle={MAP_STYLE}>
 							{selectedEdge && (
 								<Popup
