@@ -182,7 +182,7 @@ function Root() {
 				</AppShell.Header>
 
 				<AppShell.Main>
-					<Container h="85vh" fluid>
+					<Container h="88vh" fluid>
 						<Map initialViewState={INITIAL_VIEW_STATE} mapStyle={MAP_STYLE}>
 							{selectedEdge && (
 								<Popup
