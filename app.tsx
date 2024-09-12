@@ -176,7 +176,7 @@ function Root() {
 
 	return (
 		<MantineProvider>
-			<AppShell header={{ height: 60 }} padding="md">
+			<AppShell padding="md">
 				<AppShell.Header withBorder={false}>
 					<Header />
 				</AppShell.Header>
