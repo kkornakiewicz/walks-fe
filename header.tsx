@@ -9,12 +9,10 @@ const HeaderBar = styled.div`
   background-color: #282c34;
   color: white;
   padding: 15px;
-  height: 20px;
   font-family: "Gill Sans", sans-serif;
 `
 
 const Title = styled.div`
-  font-size: 1rem;
   font-weight: bold;
 `
 
