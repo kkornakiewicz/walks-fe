@@ -3,11 +3,9 @@ import type * as GeoJSON from "geojson"
 
 import "@mantine/core/styles.css"
 
-import styled from "styled-components"
 import { createRoot } from "react-dom/client"
 import {
 	Map,
-	NavigationControl,
 	Popup,
 	useControl,
 } from "react-map-gl/maplibre"
@@ -17,13 +15,12 @@ import Loading from "./loading.tsx"
 
 import {
 	AppShell,
-	AspectRatio,
-	Burger,
 	Container,
-	Skeleton,
+	createTheme,
+	rem,
 } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
-import { MantineProvider } from "@mantine/core"
+import { MantineProvider, Text } from "@mantine/core"
 
 import { GeoJsonLayer } from "deck.gl"
 import { MapboxOverlay, MapboxOverlayProps } from "@deck.gl/mapbox"
@@ -34,6 +31,7 @@ import {
 	NodeProperties,
 	EdgeProperties,
 } from "./types.tsx"
+import Menu from "./menu.js"
 
 const url_edges =
 	"https://raw.githubusercontent.com/kkornakiewicz/walks-fe/main/edges.json"
@@ -48,12 +46,15 @@ const INITIAL_VIEW_STATE = {
 	pitch: 30,
 }
 
-const PopupContent = styled.div`
-	font-size: 2vw;
-	padding: 0.2em 1em;
-	line-height: 1.2em;
-	font-family: "Gill Sans", sans-serif;
-`
+const theme = createTheme({
+	fontSizes: {
+    xs: rem(10),
+    sm: rem(11),
+    md: rem(14),
+    lg: rem(16),
+    xl: rem(20),
+  },
+});
 
 const MAP_STYLE = "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json"
 
@@ -64,7 +65,7 @@ function DeckGLOverlay(props: MapboxOverlayProps) {
 }
 
 function Root() {
-	const [opened, { toggle }] = useDisclosure(false)
+	const [opened, { toggle, open, close }] = useDisclosure(false)
 
 	const [selectedEdge, setSelectedEdge] = useState<EdgeFeature | null>(null)
 	const [edges, setEdges] = useState<GeoJSON.FeatureCollection<
@@ -175,13 +176,14 @@ function Root() {
 	]
 
 	return (
-		<MantineProvider>
-			<AppShell header={{ height: 70}}>
+		<MantineProvider theme={theme}>
+			<AppShell header={{ height: 60 }}>
 				<AppShell.Header withBorder={false}>
-					<Header />
+					<Header opened={opened} toggle={toggle} />
 				</AppShell.Header>
 
 				<AppShell.Main>
+					<Menu opened={opened} close={close} open={open} />
 					<Container h="100vh" fluid w="100%" p="0">
 						<Map initialViewState={INITIAL_VIEW_STATE} mapStyle={MAP_STYLE}>
 							{selectedEdge && (
@@ -192,7 +194,8 @@ function Root() {
 									latitude={selectedEdge.geometry.coordinates[0][1]}
 									maxWidth="60em"
 								>
-									<PopupContent>{selectedEdge.properties.name}</PopupContent>
+									<Text>{selectedEdge.properties.name}</Text>
+
 								</Popup>
 							)}
 							<DeckGLOverlay
