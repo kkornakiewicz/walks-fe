@@ -13,8 +13,10 @@ react + deck.gl
 ## Done: 
 - skeleton app
 - loading data from github repo
+- on-hover info for streets
+- show/hidde toggles
+- project information
 
 ## TODO:
-- automated status update, widget for statistics and context
-- on-hover info for streets
+- cleanup & refactor
 
