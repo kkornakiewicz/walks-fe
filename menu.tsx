@@ -1,13 +1,13 @@
-import React from "react"
 import {
-  Text,
-  Title,
+  Divider,
   Drawer,
   Group,
-  Divider,
-  Switch,
   Space,
+  Switch,
+  Text,
+  Title,
 } from "@mantine/core"
+import React from "react"
 
 function Menu(props: {
   opened: boolean
@@ -75,7 +75,7 @@ function Menu(props: {
         </Group>
         <Space h="xl" />
         <Divider my="lg" />
-        <Text>Made and walked in Barcelona.</Text>
+        <Text>♡ Made and walked in Barcelona.</Text>
       </Drawer>
     </>
   )

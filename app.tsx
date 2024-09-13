@@ -4,7 +4,7 @@ import "@mantine/core/styles.css"
 import { AppShell, Container } from "@mantine/core"
 import { MantineProvider } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
-import React, {useState } from "react"
+import React, { useState } from "react"
 import { createRoot } from "react-dom/client"
 
 import Header from "./header.tsx"

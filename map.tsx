@@ -47,15 +47,15 @@ const Map = (props: { showNodes: boolean; showStreets: boolean }) => {
     GeoJSON.Point,
     NodeProperties
   > | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [hovered, setHovered] = useState(null)
+  const [_loading, setLoading] = useState(true)
+  const [_error, setError] = useState(null)
+  const [hovered, setHovered] = useState<number | undefined>(undefined)
 
-  const hover = el => {
+  const hover = (el: EdgeFeature) => {
     if (el != null) {
       setHovered(el.properties.osmid)
     } else {
-      setHovered(null)
+      setHovered(undefined)
     }
   }
 
