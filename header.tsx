@@ -1,7 +1,6 @@
-import { Flex, Text} from "@mantine/core"
+import { Flex, Text, rgb} from "@mantine/core"
 import React from "react"
 import { Burger } from "@mantine/core"
-import { useDisclosure } from "@mantine/hooks"
 
 // Header Component
 const Header = (props: {opened: boolean, toggle:  () => void}) => {
@@ -10,7 +9,7 @@ const Header = (props: {opened: boolean, toggle:  () => void}) => {
       justify="space-between"
       p="0 2rem"
       align="center"
-      bg="#282c34"
+      bg="#353C42"
       c="white"
       ff="Gill Sans"
       h="100%"

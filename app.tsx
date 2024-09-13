@@ -187,7 +187,14 @@ function Root() {
                   latitude={selectedEdge.geometry.coordinates[0][1]}
                   maxWidth="60em"
                 >
-                  <Text>{selectedEdge.properties.name}</Text>
+                  <Text>
+                    {
+                      /* Few edges were merged into one during map simplification*/
+                      Array.isArray(selectedEdge.properties.name)
+                        ? selectedEdge.properties.name[0]
+                        : selectedEdge.properties.name
+                    }
+                  </Text>
                 </Popup>
               )}
               <DeckGLOverlay
