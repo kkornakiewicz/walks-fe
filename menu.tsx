@@ -1,5 +1,13 @@
 import React from "react"
-import { Text, Title, Drawer, Group, Divider, Switch, Space } from "@mantine/core"
+import {
+  Text,
+  Title,
+  Drawer,
+  Group,
+  Divider,
+  Switch,
+  Space,
+} from "@mantine/core"
 
 function Menu(props: {
   opened: boolean
@@ -28,11 +36,11 @@ function Menu(props: {
           Barcelona—more than 4,000 in total. To help myself navigate, I wrote a
           bunch of scripts to crunch data and visualize the progress.
         </Text>
-         <Space h="md" />
-        <Text>
-          This page is the public part of it. Made and walked in Barcelona.
-        </Text>
+        <Space h="md" />
+        <Text>This page is the public part of it.</Text>
         <Divider my="md" />
+        <Title order={4}>Controls:</Title>
+        <Space h="md" />
         <Group>
           <Switch
             checked={props.showStreets}
@@ -65,6 +73,9 @@ function Menu(props: {
           <Title order={4}>Last updated:</Title>
           <Text>11 September 2024</Text>
         </Group>
+        <Space h="xl" />
+        <Divider my="lg" />
+        <Text>Made and walked in Barcelona.</Text>
       </Drawer>
     </>
   )
