@@ -1,5 +1,5 @@
 import React from "react"
-import { Text, Title, Drawer, Group, Divider, Switch } from "@mantine/core"
+import { Text, Title, Drawer, Group, Divider, Switch, Space } from "@mantine/core"
 
 function Menu(props: {
   opened: boolean
@@ -24,13 +24,13 @@ function Menu(props: {
       >
         <Divider my="md" />
         <Text>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.
+          Hi, I am Krzysztof. In 2024, I decided to walk every street in
+          Barcelona—more than 4,000 in total. To help myself navigate, I wrote a
+          bunch of scripts to crunch data and visualize the progress.
+        </Text>
+         <Space h="md" />
+        <Text>
+          This page is the public part of it. Made and walked in Barcelona.
         </Text>
         <Divider my="md" />
         <Group>
@@ -39,15 +39,14 @@ function Menu(props: {
             onChange={event =>
               props.setShowStreets(event.currentTarget.checked)
             }
-            label="Show streets"
+            label="Show visited streets"
           />
-          <Switch defaultChecked label="Show nodes"
-
+          <Switch
+            defaultChecked
+            label="Show missing nodes"
             checked={props.showNodes}
-            onChange={event =>
-              props.setShowNodes(event.currentTarget.checked)
-            }
-/>
+            onChange={event => props.setShowNodes(event.currentTarget.checked)}
+          />
         </Group>
         <Divider my="md" />
         <Group gap="xs">
@@ -61,6 +60,10 @@ function Menu(props: {
         <Group gap="xs">
           <Title order={4}>Total walked:</Title>
           <Text> 1558km</Text>
+        </Group>
+        <Group gap="xs">
+          <Title order={4}>Last updated:</Title>
+          <Text>11 September 2024</Text>
         </Group>
       </Drawer>
     </>
