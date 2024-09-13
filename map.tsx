@@ -1,18 +1,19 @@
-import React, { useState, useEffect } from "react"
-import type * as GeoJSON from "geojson"
 import "@mantine/core/styles.css"
-import { Map as MapLibre, Popup, useControl } from "react-map-gl/maplibre"
-import { GeoJsonLayer } from "deck.gl"
+import "maplibre-gl/dist/maplibre-gl.css"
+
 import { MapboxOverlay, MapboxOverlayProps } from "@deck.gl/mapbox"
 import { Text } from "@mantine/core"
-import {
-  NodeFeature,
-  EdgeFeature,
-  NodeProperties,
-  EdgeProperties,
-} from "./types.tsx"
+import { GeoJsonLayer } from "deck.gl"
+import type * as GeoJSON from "geojson"
+import React, { useEffect, useState } from "react"
+import { Map as MapLibre, Popup, useControl } from "react-map-gl/maplibre"
 
-import "maplibre-gl/dist/maplibre-gl.css"
+import {
+  EdgeFeature,
+  EdgeProperties,
+  NodeFeature,
+  NodeProperties,
+} from "./types.tsx"
 
 const url_edges =
   "https://raw.githubusercontent.com/kkornakiewicz/walks-fe/main/edges.json"
@@ -36,8 +37,7 @@ function DeckGLOverlay(props: MapboxOverlayProps) {
   return null
 }
 
-const Map = (props: {showNodes: boolean, showStreets: boolean}) => {
-
+const Map = (props: { showNodes: boolean; showStreets: boolean }) => {
   const [selectedEdge, setSelectedEdge] = useState<EdgeFeature | null>(null)
   const [edges, setEdges] = useState<GeoJSON.FeatureCollection<
     GeoJSON.LineString,
@@ -144,30 +144,35 @@ const Map = (props: {showNodes: boolean, showStreets: boolean}) => {
       getLineWidth: 10,
       beforeId: "watername_ocean", // In interleaved mode, render the layer under map labels
       visible: props.showNodes,
-    })
+    }),
   ]
 
-  return <MapLibre initialViewState={INITIAL_VIEW_STATE} mapStyle={MAP_STYLE}>
-    {selectedEdge && (
-      <Popup
-        key={selectedEdge.properties.osmid}
-        style={{ zIndex: 10 }} /* position above deck.gl canvas */
-        longitude={selectedEdge.geometry.coordinates[0][0]}
-        latitude={selectedEdge.geometry.coordinates[0][1]}
-        maxWidth="60em"
-      >
-        <Text>
-          {
-            /* Few edges were merged into one during map simplification*/
-            Array.isArray(selectedEdge.properties.name)
-              ? selectedEdge.properties.name[0]
-              : selectedEdge.properties.name
-          }
-        </Text>
-      </Popup>
-    )}
-    <DeckGLOverlay layers={layers} /* interleaved */ useDevicePixels={false} />
-  </MapLibre>
+  return (
+    <MapLibre initialViewState={INITIAL_VIEW_STATE} mapStyle={MAP_STYLE}>
+      {selectedEdge && (
+        <Popup
+          key={selectedEdge.properties.osmid}
+          style={{ zIndex: 10 }} /* position above deck.gl canvas */
+          longitude={selectedEdge.geometry.coordinates[0][0]}
+          latitude={selectedEdge.geometry.coordinates[0][1]}
+          maxWidth="60em"
+        >
+          <Text>
+            {
+              /* Few edges were merged into one during map simplification*/
+              Array.isArray(selectedEdge.properties.name)
+                ? selectedEdge.properties.name[0]
+                : selectedEdge.properties.name
+            }
+          </Text>
+        </Popup>
+      )}
+      <DeckGLOverlay
+        layers={layers}
+        /* interleaved */ useDevicePixels={false}
+      />
+    </MapLibre>
+  )
 }
 
-export default Map;
+export default Map

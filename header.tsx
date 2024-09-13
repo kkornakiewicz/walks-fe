@@ -1,9 +1,9 @@
-import { Flex, Text, rgb} from "@mantine/core"
-import React from "react"
+import { Flex, Text } from "@mantine/core"
 import { Burger } from "@mantine/core"
+import React from "react"
 
 // Header Component
-const Header = (props: {opened: boolean, toggle:  () => void}) => {
+const Header = (props: { opened: boolean; toggle: () => void }) => {
   return (
     <Flex
       justify="space-between"
