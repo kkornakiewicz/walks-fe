@@ -59,23 +59,26 @@ function Menu(props: {
         <Divider my="md" />
         <Group gap="xs">
           <Title order={4}>Completed:</Title>
-          <Text>45.61%</Text>
+          <Text>46.71%</Text>
         </Group>
         <Group gap="xs">
           <Title order={4}>Walks:</Title>
-          <Text> 177</Text>
+          <Text> 181</Text>
         </Group>
         <Group gap="xs">
           <Title order={4}>Total walked:</Title>
-          <Text> 1558km</Text>
+          <Text> 1606km</Text>
         </Group>
         <Group gap="xs">
           <Title order={4}>Last updated:</Title>
-          <Text>11 September 2024</Text>
+          <Text>15 September 2024</Text>
         </Group>
         <Space h="xl" />
         <Divider my="lg" />
-        <Text>♡ Made and walked in Barcelona.</Text>
+        <Text>
+          ♥ Made and walked in Barcelona,{" "}
+          <a href="https://kornakiewi.cz/contact/"> say hi.</a>{" "}
+        </Text>
       </Drawer>
     </>
   )
