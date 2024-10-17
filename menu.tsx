@@ -59,19 +59,19 @@ function Menu(props: {
         <Divider my="md" />
         <Group gap="xs">
           <Title order={4}>Completed:</Title>
-          <Text>46.71%</Text>
+          <Text>48.42%</Text>
         </Group>
         <Group gap="xs">
           <Title order={4}>Walks:</Title>
-          <Text> 181</Text>
+          <Text>191</Text>
         </Group>
         <Group gap="xs">
           <Title order={4}>Total walked:</Title>
-          <Text> 1606km</Text>
+          <Text>1687km</Text>
         </Group>
         <Group gap="xs">
           <Title order={4}>Last updated:</Title>
-          <Text>15 September 2024</Text>
+          <Text>17 October 2024</Text>
         </Group>
         <Space h="xl" />
         <Divider my="lg" />
