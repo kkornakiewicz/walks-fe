@@ -10,6 +10,8 @@ import {
 import React from "react"
 
 function Menu(props: {
+  showCurrentLocation: boolean | undefined
+  setShowCurrentLocation(checked: boolean): void
   opened: boolean
   close: () => void
   open: () => void
@@ -17,6 +19,12 @@ function Menu(props: {
   setShowStreets: (x: boolean) => void
   showNodes: boolean
   setShowNodes: (x: boolean) => void
+  stats: {
+    completed: string
+    walks: string
+    totalWalked: string
+    lastUpdated: string
+  }
 }) {
   return (
     <>
@@ -55,23 +63,30 @@ function Menu(props: {
             checked={props.showNodes}
             onChange={event => props.setShowNodes(event.currentTarget.checked)}
           />
+          <Switch
+            checked={props.showCurrentLocation}
+            onChange={event =>
+              props.setShowCurrentLocation(event.currentTarget.checked)
+            }
+            label="Show current location"
+          />
         </Group>
         <Divider my="md" />
         <Group gap="xs">
           <Title order={4}>Completed:</Title>
-          <Text>48.42%</Text>
+          <Text>{props.stats.completed}</Text>
         </Group>
         <Group gap="xs">
           <Title order={4}>Walks:</Title>
-          <Text>191</Text>
+          <Text>{props.stats.walks}</Text>
         </Group>
         <Group gap="xs">
           <Title order={4}>Total walked:</Title>
-          <Text>1687km</Text>
+          <Text>{props.stats.totalWalked}</Text>
         </Group>
         <Group gap="xs">
           <Title order={4}>Last updated:</Title>
-          <Text>17 October 2024</Text>
+          <Text>{props.stats.lastUpdated}</Text>
         </Group>
         <Space h="xl" />
         <Divider my="lg" />

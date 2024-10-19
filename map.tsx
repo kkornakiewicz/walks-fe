@@ -3,7 +3,7 @@ import "maplibre-gl/dist/maplibre-gl.css"
 
 import { MapboxOverlay, MapboxOverlayProps } from "@deck.gl/mapbox"
 import { Text } from "@mantine/core"
-import { GeoJsonLayer } from "deck.gl"
+import { Color, GeoJsonLayer } from "deck.gl"
 import type * as GeoJSON from "geojson"
 import React, { useEffect, useState } from "react"
 import { Map as MapLibre, Popup, useControl } from "react-map-gl/maplibre"
@@ -37,7 +37,7 @@ function DeckGLOverlay(props: MapboxOverlayProps) {
   return null
 }
 
-const Map = (props: { showNodes: boolean; showStreets: boolean }) => {
+const Map = (props: { showNodes: boolean; showStreets: boolean, showCurrentLocation: boolean, currentLocation: [number, number] | null}) => {
   const [selectedEdge, setSelectedEdge] = useState<EdgeFeature | null>(null)
   const [edges, setEdges] = useState<GeoJSON.FeatureCollection<
     GeoJSON.LineString,
@@ -59,74 +59,71 @@ const Map = (props: { showNodes: boolean; showStreets: boolean }) => {
     }
   }
 
-  const getEdgeColorByProperty = (el: EdgeFeature) => {
+  const HOVERED_EDGE_COLOR: Color = [224, 49, 49, 240];
+  const VISITED_EDGE_COLOR: Color = [0, 47, 167, 140];
+  const UNVISITED_EDGE_COLOR: Color = [0, 47, 167, 10];
+  const VISITED_NODE_COLOR: Color = [0, 0, 0, 20];
+  const UNVISITED_NODE_COLOR: Color = [0, 0, 0, 180];
+
+  const getEdgeColorByProperty = (el: EdgeFeature): Color => {
     if (el.properties.osmid === hovered) {
-      return [224, 49, 49, 240]
+      return HOVERED_EDGE_COLOR
     }
-    if (el.properties.visited === true) return [0, 47, 167, 140]
+    if (el.properties.visited === true) return VISITED_EDGE_COLOR
     else {
-      return [0, 47, 167, 10]
+      return UNVISITED_EDGE_COLOR
     }
   }
 
-  const getNodeColorByProperty = (el: NodeFeature) => {
+  const getNodeColorByProperty = (el: NodeFeature): Color => {
     if (el.properties.visited === true) {
-      return [0, 0, 0, 20]
+      return VISITED_NODE_COLOR;
     }
-    return [0, 0, 0, 180]
+    return UNVISITED_NODE_COLOR;
+  }
+  
+
+  const fetchData = async () => {
+    try {
+      const [edgesResponse, nodesResponse] = await Promise.all([
+        fetch(url_edges),
+        fetch(url_nodes)
+      ]);
+
+      if (!edgesResponse.ok || !nodesResponse.ok) {
+        throw new Error(`HTTP error! Status: ${edgesResponse.status} ${nodesResponse.status}`);
+      }
+
+      const [edgesData, nodesData] = await Promise.all([
+        edgesResponse.json(),
+        nodesResponse.json()
+      ]);
+
+      setEdges(edgesData);
+      setNodes(nodesData);
+      setLoading(false);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unknown error occurred');
+      }
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
-    // Fetch data when the component loads
-    const fetchData = async () => {
-      try {
-        const response = await fetch(url_edges)
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`)
-        }
-        const jsonData = await response.json() // Use response.text() for non-JSON data
-        setEdges(jsonData)
-        setLoading(false)
-      } catch (error) {
-        setError(error.message)
-        setLoading(false)
-      }
-    }
-
-    fetchData()
-  }, [])
-
-  useEffect(() => {
-    // Fetch data when the component loads
-    const fetchData = async () => {
-      try {
-        const response = await fetch(url_nodes)
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`)
-        }
-        const jsonData = await response.json() // Use response.text() for non-JSON data
-        setNodes(jsonData)
-        console.log(jsonData)
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          setError(error.message)
-        } else {
-          setError('An unknown error occurred')
-        }
-        setLoading(false)
-      }
-    }
-
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
   const layers = [
     new GeoJsonLayer({
       id: "map",
-      data: edges,
+      data: edges || [],
       // Styles
-      getLineColor: getEdgeColorByProperty,
+      getLineColor: (el) => getEdgeColorByProperty(el as EdgeFeature),
       getLineWidth: 8,
+      
       // Interactive props
       autoHighlight: true,
       pickable: true,
@@ -140,14 +137,34 @@ const Map = (props: { showNodes: boolean; showStreets: boolean }) => {
     }),
     new GeoJsonLayer({
       id: "nodes",
-      data: nodes,
+      data: nodes || [],
       // Styles
-      getLineColor: getNodeColorByProperty,
+      getFillColor: (el) => getNodeColorByProperty(el as NodeFeature),
+      getPointRadius: 5,
       // Interactive props
       autoHighlight: true,
-      getLineWidth: 10,
       beforeId: "watername_ocean", // In interleaved mode, render the layer under map labels
       visible: props.showNodes,
+    }),
+    new GeoJsonLayer({
+      id: "current-location",
+      data: {
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: props.currentLocation || [0, 0],
+            },
+            properties: {},
+          },
+        ],
+      },
+      getFillColor: [255, 0, 0, 255],
+      getPointRadius: 30,
+      beforeId: "watername_ocean", // In interleaved mode, render the layer under map labels
+      visible: props.showCurrentLocation,
     }),
   ]
 
