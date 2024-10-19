@@ -1,15 +1,14 @@
 import "maplibre-gl/dist/maplibre-gl.css"
 import "@mantine/core/styles.css"
 
-import { AppShell, Container } from "@mantine/core"
+import { AppShell, Container} from "@mantine/core"
 import { MantineProvider } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
 import React, { useState } from "react"
 import { createRoot } from "react-dom/client"
-
-import Header from "./header.tsx"
-import Map from "./map.tsx"
-import Menu from "./menu.js"
+import Header from "./header"
+import Map from "./map"
+import Menu from "./menu"
 
 function Root() {
   const [opened, { toggle, open, close }] = useDisclosure(false)

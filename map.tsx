@@ -13,7 +13,7 @@ import {
   EdgeProperties,
   NodeFeature,
   NodeProperties,
-} from "./types.tsx"
+} from "./types"
 
 const url_edges =
   "https://raw.githubusercontent.com/kkornakiewicz/walks-fe/main/edges.json"
@@ -48,7 +48,7 @@ const Map = (props: { showNodes: boolean; showStreets: boolean }) => {
     NodeProperties
   > | null>(null)
   const [_loading, setLoading] = useState(true)
-  const [_error, setError] = useState(null)
+  const [_error, setError] = useState<string | null>(null)
   const [hovered, setHovered] = useState<number | undefined>(undefined)
 
   const hover = (el: EdgeFeature) => {
@@ -107,8 +107,12 @@ const Map = (props: { showNodes: boolean; showStreets: boolean }) => {
         const jsonData = await response.json() // Use response.text() for non-JSON data
         setNodes(jsonData)
         console.log(jsonData)
-      } catch (error) {
-        setError(error.message)
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error.message)
+        } else {
+          setError('An unknown error occurred')
+        }
         setLoading(false)
       }
     }
