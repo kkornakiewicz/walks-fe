@@ -3,7 +3,7 @@ import "maplibre-gl/dist/maplibre-gl.css"
 
 import { MapboxOverlay, MapboxOverlayProps } from "@deck.gl/mapbox"
 import { Text } from "@mantine/core"
-import { Color, GeoJsonLayer } from "deck.gl"
+import { Color, GeoJsonLayer, MapViewState } from "deck.gl"
 import type * as GeoJSON from "geojson"
 import React, { useEffect, useState } from "react"
 import { Map as MapLibre, Popup, useControl } from "react-map-gl/maplibre"
@@ -20,14 +20,6 @@ const url_edges =
 const url_nodes =
   "https://raw.githubusercontent.com/kkornakiewicz/walks-fe/main/nodes.json"
 
-const INITIAL_VIEW_STATE = {
-  latitude: 41.38685633118305,
-  longitude: 2.1696874299405295,
-  zoom: 12.5,
-  bearing: 0,
-  pitch: 30,
-}
-
 const MAP_STYLE =
   "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
 
@@ -37,7 +29,14 @@ function DeckGLOverlay(props: MapboxOverlayProps) {
   return null
 }
 
-const Map = (props: { showNodes: boolean; showStreets: boolean, showCurrentLocation: boolean, currentLocation: [number, number] | null}) => {
+const Map = (props: {
+  showNodes: boolean
+  showStreets: boolean
+  showCurrentLocation: boolean
+  currentLocation: [number, number] | null
+  viewState: MapViewState
+  setViewState: (viewState: MapViewState) => void
+}) => {
   const [selectedEdge, setSelectedEdge] = useState<EdgeFeature | null>(null)
   const [edges, setEdges] = useState<GeoJSON.FeatureCollection<
     GeoJSON.LineString,
@@ -59,11 +58,11 @@ const Map = (props: { showNodes: boolean; showStreets: boolean, showCurrentLocat
     }
   }
 
-  const HOVERED_EDGE_COLOR: Color = [224, 49, 49, 240];
-  const VISITED_EDGE_COLOR: Color = [0, 47, 167, 140];
-  const UNVISITED_EDGE_COLOR: Color = [0, 47, 167, 10];
-  const VISITED_NODE_COLOR: Color = [0, 0, 0, 20];
-  const UNVISITED_NODE_COLOR: Color = [0, 0, 0, 180];
+  const HOVERED_EDGE_COLOR: Color = [224, 49, 49, 240]
+  const VISITED_EDGE_COLOR: Color = [0, 47, 167, 140]
+  const UNVISITED_EDGE_COLOR: Color = [0, 47, 167, 10]
+  const VISITED_NODE_COLOR: Color = [0, 0, 0, 20]
+  const UNVISITED_NODE_COLOR: Color = [0, 0, 0, 180]
 
   const getEdgeColorByProperty = (el: EdgeFeature): Color => {
     if (el.properties.osmid === hovered) {
@@ -77,53 +76,54 @@ const Map = (props: { showNodes: boolean; showStreets: boolean, showCurrentLocat
 
   const getNodeColorByProperty = (el: NodeFeature): Color => {
     if (el.properties.visited === true) {
-      return VISITED_NODE_COLOR;
+      return VISITED_NODE_COLOR
     }
-    return UNVISITED_NODE_COLOR;
+    return UNVISITED_NODE_COLOR
   }
-  
 
   const fetchData = async () => {
     try {
       const [edgesResponse, nodesResponse] = await Promise.all([
         fetch(url_edges),
-        fetch(url_nodes)
-      ]);
+        fetch(url_nodes),
+      ])
 
       if (!edgesResponse.ok || !nodesResponse.ok) {
-        throw new Error(`HTTP error! Status: ${edgesResponse.status} ${nodesResponse.status}`);
+        throw new Error(
+          `HTTP error! Status: ${edgesResponse.status} ${nodesResponse.status}`,
+        )
       }
 
       const [edgesData, nodesData] = await Promise.all([
         edgesResponse.json(),
-        nodesResponse.json()
-      ]);
+        nodesResponse.json(),
+      ])
 
-      setEdges(edgesData);
-      setNodes(nodesData);
-      setLoading(false);
+      setEdges(edgesData)
+      setNodes(nodesData)
+      setLoading(false)
     } catch (error: unknown) {
       if (error instanceof Error) {
-        setError(error.message);
+        setError(error.message)
       } else {
-        setError('An unknown error occurred');
+        setError("An unknown error occurred")
       }
-      setLoading(false);
+      setLoading(false)
     }
   }
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchData()
+  }, [])
 
   const layers = [
     new GeoJsonLayer({
       id: "map",
       data: edges || [],
       // Styles
-      getLineColor: (el) => getEdgeColorByProperty(el as EdgeFeature),
+      getLineColor: el => getEdgeColorByProperty(el as EdgeFeature),
       getLineWidth: 8,
-      
+
       // Interactive props
       autoHighlight: true,
       pickable: true,
@@ -132,18 +132,17 @@ const Map = (props: { showNodes: boolean; showStreets: boolean, showCurrentLocat
       updateTriggers: {
         getLineColor: [hovered],
       },
-      beforeId: "watername_ocean", // In interleaved mode, render the layer under map labels
       visible: props.showStreets,
     }),
     new GeoJsonLayer({
       id: "nodes",
       data: nodes || [],
       // Styles
-      getFillColor: (el) => getNodeColorByProperty(el as NodeFeature),
+      getLineColor: el => getNodeColorByProperty(el as NodeFeature),
+      getFillColor: el => getNodeColorByProperty(el as NodeFeature),
       getPointRadius: 5,
       // Interactive props
       autoHighlight: true,
-      beforeId: "watername_ocean", // In interleaved mode, render the layer under map labels
       visible: props.showNodes,
     }),
     new GeoJsonLayer({
@@ -162,14 +161,18 @@ const Map = (props: { showNodes: boolean; showStreets: boolean, showCurrentLocat
         ],
       },
       getFillColor: [255, 0, 0, 255],
-      getPointRadius: 30,
+      getPointRadius: 25,
       beforeId: "watername_ocean", // In interleaved mode, render the layer under map labels
       visible: props.showCurrentLocation,
     }),
   ]
 
   return (
-    <MapLibre initialViewState={INITIAL_VIEW_STATE} mapStyle={MAP_STYLE}>
+    <MapLibre
+      {...props.viewState}
+      onMove={evt => props.setViewState(evt.viewState)}
+      mapStyle={MAP_STYLE}
+    >
       {selectedEdge && (
         <Popup
           key={selectedEdge.properties.osmid}
@@ -188,10 +191,7 @@ const Map = (props: { showNodes: boolean; showStreets: boolean, showCurrentLocat
           </Text>
         </Popup>
       )}
-      <DeckGLOverlay
-        layers={layers}
-        /* interleaved */ useDevicePixels={false}
-      />
+      <DeckGLOverlay layers={layers} useDevicePixels={false} />
     </MapLibre>
   )
 }
