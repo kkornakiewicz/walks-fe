@@ -100,7 +100,6 @@ function Root() {
         <AppShell.Header withBorder={false}>
           <Header opened={opened} toggle={toggle} />
         </AppShell.Header>
-
         <AppShell.Main>
           <Menu
             opened={opened}

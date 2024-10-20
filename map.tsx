@@ -17,9 +17,9 @@ import {
 } from "./types"
 
 const edgesUrl =
-  "https://raw.githubusercontent.com/kkornakiewicz/walks-fe/main/edges.json"
+  "https://raw.githubusercontent.com/kkornakiewicz/walks-fe/main/data/edges.json"
 const nodesUrl =
-  "https://raw.githubusercontent.com/kkornakiewicz/walks-fe/main/nodes.json"
+  "https://raw.githubusercontent.com/kkornakiewicz/walks-fe/main/data/nodes.json"
 
 const MAP_STYLE =
   "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
