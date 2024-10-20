@@ -10,12 +10,28 @@ import Header from "./header"
 import Map from "./map"
 import Menu from "./menu"
 import { MapViewState } from "deck.gl"
+import { MapSettings } from "./types"
+
+const stats = {
+  completed: "49.79%",
+  walks: "193",
+  totalWalked: "1715km",
+  lastUpdated: "19 October 2024",
+}
 
 function Root() {
   const [opened, { toggle, open, close }] = useDisclosure(false)
-  const [showStreets, setShowStreets] = useState(true)
-  const [showNodes, setShowNodes] = useState(false)
-  const [showCurrentLocation, setShowCurrentLocation] = useState(false)
+  const [mapSettings, setMapSettings] = useState<MapSettings>({
+    showStreets: true,
+    showNodes: false,
+    showCurrentLocation: false,
+    setShowStreets: (x: boolean) =>
+      setMapSettings({ ...mapSettings, showStreets: x }),
+    setShowNodes: (x: boolean) =>
+      setMapSettings({ ...mapSettings, showNodes: x }),
+    setShowCurrentLocation: (x: boolean) =>
+      setMapSettings({ ...mapSettings, showCurrentLocation: x }),
+  })
   const [currentLocation, setCurrentLocation] = useState<
     [number, number] | null
   >(null)
@@ -40,7 +56,7 @@ function Root() {
 
   // Update current location every 10 seconds
   useEffect(() => {
-    if (showCurrentLocation) {
+    if (mapSettings.showCurrentLocation) {
       // Show current location on the map
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(position => {
@@ -74,14 +90,7 @@ function Root() {
         clearInterval(intervalState)
       }
     }
-  }, [showCurrentLocation])
-
-  const stats = {
-    completed: "48.42%",
-    walks: "191",
-    totalWalked: "1687km",
-    lastUpdated: "17 October 2024",
-  }
+  }, [mapSettings.showCurrentLocation])
 
   return (
     <MantineProvider>
@@ -92,23 +101,16 @@ function Root() {
 
         <AppShell.Main>
           <Menu
-            showCurrentLocation={showCurrentLocation}
-            setShowCurrentLocation={setShowCurrentLocation}
             opened={opened}
             close={close}
             open={open}
-            showStreets={showStreets}
-            setShowStreets={setShowStreets}
-            showNodes={showNodes}
-            setShowNodes={setShowNodes}
             stats={stats}
+            mapSettings={mapSettings}
           />
           <Container h="100vh" fluid w="100%" p="0">
             <Map
-              showNodes={showNodes}
-              showStreets={showStreets}
+              mapSettings={mapSettings}
               currentLocation={currentLocation}
-              showCurrentLocation={showCurrentLocation}
               viewState={viewState}
               setViewState={setViewState}
             />

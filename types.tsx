@@ -5,3 +5,12 @@ export type EdgeFeature = GeoJSON.Feature<GeoJSON.LineString, EdgeProperties>
 
 export type NodeProperties = { osmid: number; visited: boolean }
 export type NodeFeature = GeoJSON.Feature<GeoJSON.Point, NodeProperties>
+
+export type MapSettings = {
+  showStreets: boolean
+  showNodes: boolean
+  showCurrentLocation: boolean
+  setShowStreets: (x: boolean) => void
+  setShowNodes: (x: boolean) => void
+  setShowCurrentLocation: (x: boolean) => void
+}

@@ -11,13 +11,14 @@ import { Map as MapLibre, Popup, useControl } from "react-map-gl/maplibre"
 import {
   EdgeFeature,
   EdgeProperties,
+  MapSettings,
   NodeFeature,
   NodeProperties,
 } from "./types"
 
-const url_edges =
+const edgesUrl =
   "https://raw.githubusercontent.com/kkornakiewicz/walks-fe/main/edges.json"
-const url_nodes =
+const nodesUrl =
   "https://raw.githubusercontent.com/kkornakiewicz/walks-fe/main/nodes.json"
 
 const MAP_STYLE =
@@ -30,13 +31,12 @@ function DeckGLOverlay(props: MapboxOverlayProps) {
 }
 
 const Map = (props: {
-  showNodes: boolean
-  showStreets: boolean
-  showCurrentLocation: boolean
+  mapSettings: MapSettings
   currentLocation: [number, number] | null
   viewState: MapViewState
   setViewState: (viewState: MapViewState) => void
 }) => {
+  const { showStreets, showNodes, showCurrentLocation } = props.mapSettings
   const [selectedEdge, setSelectedEdge] = useState<EdgeFeature | null>(null)
   const [edges, setEdges] = useState<GeoJSON.FeatureCollection<
     GeoJSON.LineString,
@@ -84,8 +84,8 @@ const Map = (props: {
   const fetchData = async () => {
     try {
       const [edgesResponse, nodesResponse] = await Promise.all([
-        fetch(url_edges),
-        fetch(url_nodes),
+        fetch(edgesUrl),
+        fetch(nodesUrl),
       ])
 
       if (!edgesResponse.ok || !nodesResponse.ok) {
@@ -132,7 +132,7 @@ const Map = (props: {
       updateTriggers: {
         getLineColor: [hovered],
       },
-      visible: props.showStreets,
+      visible: showStreets,
     }),
     new GeoJsonLayer({
       id: "nodes",
@@ -143,7 +143,7 @@ const Map = (props: {
       getPointRadius: 5,
       // Interactive props
       autoHighlight: true,
-      visible: props.showNodes,
+      visible: showNodes,
     }),
     new GeoJsonLayer({
       id: "current-location",
@@ -163,7 +163,7 @@ const Map = (props: {
       getFillColor: [255, 0, 0, 255],
       getPointRadius: 25,
       beforeId: "watername_ocean", // In interleaved mode, render the layer under map labels
-      visible: props.showCurrentLocation,
+      visible: showCurrentLocation,
     }),
   ]
 

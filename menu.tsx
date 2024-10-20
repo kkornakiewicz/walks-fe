@@ -8,17 +8,20 @@ import {
   Title,
 } from "@mantine/core"
 import React from "react"
+import { MapSettings } from "./types"
+
+const Stat = ({ label, value }: { label: string; value: string }) => (
+  <Group gap="xs">
+    <Title order={4}>{label}</Title>
+    <Text>{value}</Text>
+  </Group>
+)
 
 function Menu(props: {
-  showCurrentLocation: boolean | undefined
-  setShowCurrentLocation(checked: boolean): void
   opened: boolean
   close: () => void
   open: () => void
-  showStreets: boolean
-  setShowStreets: (x: boolean) => void
-  showNodes: boolean
-  setShowNodes: (x: boolean) => void
+  mapSettings: MapSettings
   stats: {
     completed: string
     walks: string
@@ -26,6 +29,15 @@ function Menu(props: {
     lastUpdated: string
   }
 }) {
+  const {
+    showStreets,
+    showNodes,
+    showCurrentLocation,
+    setShowStreets,
+    setShowNodes,
+    setShowCurrentLocation,
+  } = props.mapSettings
+
   return (
     <>
       <Drawer
@@ -51,43 +63,30 @@ function Menu(props: {
         <Space h="md" />
         <Group>
           <Switch
-            checked={props.showStreets}
-            onChange={event =>
-              props.setShowStreets(event.currentTarget.checked)
-            }
+            checked={showStreets}
+            onChange={event => setShowStreets(event.currentTarget.checked)}
             label="Show visited streets"
           />
           <Switch
             defaultChecked
             label="Show missing nodes"
-            checked={props.showNodes}
-            onChange={event => props.setShowNodes(event.currentTarget.checked)}
+            checked={showNodes}
+            onChange={event => setShowNodes(event.currentTarget.checked)}
           />
           <Switch
-            checked={props.showCurrentLocation}
+            checked={showCurrentLocation}
             onChange={event =>
-              props.setShowCurrentLocation(event.currentTarget.checked)
+              setShowCurrentLocation(event.currentTarget.checked)
             }
             label="Show current location"
           />
         </Group>
         <Divider my="md" />
-        <Group gap="xs">
-          <Title order={4}>Completed:</Title>
-          <Text>{props.stats.completed}</Text>
-        </Group>
-        <Group gap="xs">
-          <Title order={4}>Walks:</Title>
-          <Text>{props.stats.walks}</Text>
-        </Group>
-        <Group gap="xs">
-          <Title order={4}>Total walked:</Title>
-          <Text>{props.stats.totalWalked}</Text>
-        </Group>
-        <Group gap="xs">
-          <Title order={4}>Last updated:</Title>
-          <Text>{props.stats.lastUpdated}</Text>
-        </Group>
+
+        <Stat label="Completed:" value={props.stats.completed} />
+        <Stat label="Walks:" value={props.stats.walks} />
+        <Stat label="Total walked:" value={props.stats.totalWalked} />
+        <Stat label="Last updated:" value={props.stats.lastUpdated} />
         <Space h="xl" />
         <Divider my="lg" />
         <Text>
