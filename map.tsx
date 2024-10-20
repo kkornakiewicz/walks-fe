@@ -63,6 +63,7 @@ const Map = (props: {
   const UNVISITED_EDGE_COLOR: Color = [0, 47, 167, 10]
   const VISITED_NODE_COLOR: Color = [0, 0, 0, 20]
   const UNVISITED_NODE_COLOR: Color = [0, 0, 0, 180]
+  const CURRENT_LOCATION_COLOR: Color = [210, 31, 60, 200]
 
   const getEdgeColorByProperty = (el: EdgeFeature): Color => {
     if (el.properties.osmid === hovered) {
@@ -160,7 +161,8 @@ const Map = (props: {
           },
         ],
       },
-      getFillColor: [255, 0, 0, 255],
+      getFillColor: CURRENT_LOCATION_COLOR,
+      getLineColor: CURRENT_LOCATION_COLOR,
       getPointRadius: 25,
       beforeId: "watername_ocean", // In interleaved mode, render the layer under map labels
       visible: showCurrentLocation,

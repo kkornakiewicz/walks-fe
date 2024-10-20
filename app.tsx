@@ -13,10 +13,10 @@ import { MapViewState } from "deck.gl"
 import { MapSettings } from "./types"
 
 const stats = {
-  completed: "49.79%",
-  walks: "193",
-  totalWalked: "1715km",
-  lastUpdated: "19 October 2024",
+  completed: "50.57%",
+  walks: "194",
+  totalWalked: "1722km",
+  lastUpdated: "20 October, 2024",
 }
 
 function Root() {
@@ -25,13 +25,15 @@ function Root() {
     showStreets: true,
     showNodes: false,
     showCurrentLocation: false,
-    setShowStreets: (x: boolean) =>
-      setMapSettings({ ...mapSettings, showStreets: x }),
-    setShowNodes: (x: boolean) =>
-      setMapSettings({ ...mapSettings, showNodes: x }),
-    setShowCurrentLocation: (x: boolean) =>
-      setMapSettings({ ...mapSettings, showCurrentLocation: x }),
   })
+
+  const setShowStreets = (x: boolean) =>
+    setMapSettings({ ...mapSettings, showStreets: x })
+  const setShowNodes = (x: boolean) =>
+    setMapSettings({ ...mapSettings, showNodes: x })
+  const setShowCurrentLocation = (x: boolean) =>
+    setMapSettings({ ...mapSettings, showCurrentLocation: x })
+
   const [currentLocation, setCurrentLocation] = useState<
     [number, number] | null
   >(null)
@@ -106,6 +108,9 @@ function Root() {
             open={open}
             stats={stats}
             mapSettings={mapSettings}
+            setShowStreets={setShowStreets}
+            setShowNodes={setShowNodes}
+            setShowCurrentLocation={setShowCurrentLocation}
           />
           <Container h="100vh" fluid w="100%" p="0">
             <Map

@@ -22,6 +22,9 @@ function Menu(props: {
   close: () => void
   open: () => void
   mapSettings: MapSettings
+  setShowStreets: (x: boolean) => void
+  setShowNodes: (x: boolean) => void
+  setShowCurrentLocation: (x: boolean) => void
   stats: {
     completed: string
     walks: string
@@ -29,15 +32,7 @@ function Menu(props: {
     lastUpdated: string
   }
 }) {
-  const {
-    showStreets,
-    showNodes,
-    showCurrentLocation,
-    setShowStreets,
-    setShowNodes,
-    setShowCurrentLocation,
-  } = props.mapSettings
-
+  const { showStreets, showNodes, showCurrentLocation } = props.mapSettings
   return (
     <>
       <Drawer
@@ -64,19 +59,21 @@ function Menu(props: {
         <Group>
           <Switch
             checked={showStreets}
-            onChange={event => setShowStreets(event.currentTarget.checked)}
+            onChange={event =>
+              props.setShowStreets(event.currentTarget.checked)
+            }
             label="Show visited streets"
           />
           <Switch
             defaultChecked
             label="Show missing nodes"
             checked={showNodes}
-            onChange={event => setShowNodes(event.currentTarget.checked)}
+            onChange={event => props.setShowNodes(event.currentTarget.checked)}
           />
           <Switch
             checked={showCurrentLocation}
             onChange={event =>
-              setShowCurrentLocation(event.currentTarget.checked)
+              props.setShowCurrentLocation(event.currentTarget.checked)
             }
             label="Show current location"
           />

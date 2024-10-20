@@ -10,7 +10,11 @@ export type MapSettings = {
   showStreets: boolean
   showNodes: boolean
   showCurrentLocation: boolean
-  setShowStreets: (x: boolean) => void
-  setShowNodes: (x: boolean) => void
-  setShowCurrentLocation: (x: boolean) => void
+}
+
+export type Stats = {
+  completed: string
+  walks: string
+  totalWalked: string
+  lastUpdated: string
 }
