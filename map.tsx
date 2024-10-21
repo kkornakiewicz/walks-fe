@@ -16,11 +16,10 @@ import {
   NodeProperties,
 } from "./types"
 
-const edgesUrl =
-  "https://raw.githubusercontent.com/kkornakiewicz/walks-fe/main/data/edges.json"
-const nodesUrl =
-  "https://raw.githubusercontent.com/kkornakiewicz/walks-fe/main/data/nodes.json"
-
+const BASE_URL =
+  "https://raw.githubusercontent.com/kkornakiewicz/walks-fe/main/data"
+const edgesUrl = `${BASE_URL}/edges.json`
+const nodesUrl = `${BASE_URL}/nodes.json`
 const MAP_STYLE =
   "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
 
@@ -69,17 +68,11 @@ const Map = (props: {
     if (el.properties.osmid === hovered) {
       return HOVERED_EDGE_COLOR
     }
-    if (el.properties.visited === true) return VISITED_EDGE_COLOR
-    else {
-      return UNVISITED_EDGE_COLOR
-    }
+    return el.properties.visited ? VISITED_EDGE_COLOR : UNVISITED_EDGE_COLOR
   }
 
   const getNodeColorByProperty = (el: NodeFeature): Color => {
-    if (el.properties.visited === true) {
-      return VISITED_NODE_COLOR
-    }
-    return UNVISITED_NODE_COLOR
+    return el.properties.visited ? VISITED_NODE_COLOR : UNVISITED_NODE_COLOR
   }
 
   const fetchData = async () => {
