@@ -20,6 +20,7 @@ const BASE_URL =
   "https://raw.githubusercontent.com/kkornakiewicz/walks-fe/main/data"
 const edgesUrl = `${BASE_URL}/edges.json`
 const nodesUrl = `${BASE_URL}/nodes.json`
+
 const MAP_STYLE =
   "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
 
