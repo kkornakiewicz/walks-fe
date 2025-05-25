@@ -13,10 +13,10 @@ import { MapViewState } from "deck.gl"
 import { MapSettings } from "./types"
 
 const stats = {
-  completed: "60.37%",
-  walks: "278",
-  totalWalked: "2437km",
-  lastUpdated: "April 6th, 2025",
+  completed: "60.79%",
+  walks: "298",
+  totalWalked: "2577km",
+  lastUpdated: "May 25th, 2025",
 }
 
 function Root() {
