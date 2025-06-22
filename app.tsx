@@ -10,7 +10,7 @@ import Header from "./header"
 import Map from "./map"
 import Menu from "./menu"
 import { MapViewState } from "deck.gl"
-import { MapSettings } from "./types"
+import { usePersistedMapSettings } from "./hooks"
 
 const stats = {
   completed: "60.79%",
@@ -21,18 +21,8 @@ const stats = {
 
 function Root() {
   const [opened, { toggle, open, close }] = useDisclosure(false)
-  const [mapSettings, setMapSettings] = useState<MapSettings>({
-    showStreets: true,
-    showNodes: false,
-    showCurrentLocation: false,
-  })
-
-  const setShowStreets = (x: boolean) =>
-    setMapSettings({ ...mapSettings, showStreets: x })
-  const setShowNodes = (x: boolean) =>
-    setMapSettings({ ...mapSettings, showNodes: x })
-  const setShowCurrentLocation = (x: boolean) =>
-    setMapSettings({ ...mapSettings, showCurrentLocation: x })
+  const { mapSettings, setShowStreets, setShowNodes, setShowCurrentLocation } =
+    usePersistedMapSettings()
 
   const [currentLocation, setCurrentLocation] = useState<
     [number, number] | null

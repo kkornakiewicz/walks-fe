@@ -22,9 +22,9 @@ function Menu(props: {
   close: () => void
   open: () => void
   mapSettings: MapSettings
-  setShowStreets: (x: boolean) => void
-  setShowNodes: (x: boolean) => void
-  setShowCurrentLocation: (x: boolean) => void
+  setShowStreets: (showStreets: boolean) => void
+  setShowNodes: (showNodes: boolean) => void
+  setShowCurrentLocation: (showCurrentLocation: boolean) => void
   stats: {
     completed: string
     walks: string
