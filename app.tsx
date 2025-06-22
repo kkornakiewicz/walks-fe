@@ -13,10 +13,10 @@ import { MapViewState } from "deck.gl"
 import { usePersistedMapSettings } from "./hooks"
 
 const stats = {
-  completed: "60.79%",
-  walks: "298",
-  totalWalked: "2577km",
-  lastUpdated: "May 25th, 2025",
+  completed: "61.62%",
+  walks: "319",
+  totalWalked: "2725km",
+  lastUpdated: "June 22nd, 2025",
 }
 
 function Root() {
